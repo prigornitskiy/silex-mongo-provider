@@ -2,7 +2,7 @@
 namespace Mongo\Silex\Provider;
 
 use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\ServiceProviderInterface;
 
 class MongoServiceProvider implements ServiceProviderInterface
 {
@@ -18,7 +18,7 @@ class MongoServiceProvider implements ServiceProviderInterface
      *
      * @param Application $app An Application instance
      */
-    public function register(Application $app)
+    public function register(\Pimple\Container $app)
     {
         $app[self::MONGO_CONNECTIONS] = array(
             'default' => array(
@@ -31,9 +31,9 @@ class MongoServiceProvider implements ServiceProviderInterface
             return $app[MongoServiceProvider::MONGO]->createConnection($server, $options);
         });
 
-        $app[self::MONGO] = $app->share(function () use($app) {
+        $app[self::MONGO] = function () use($app) {
             return new MongoConnectionProvider($app[MongoServiceProvider::MONGO_CONNECTIONS]);
-        });
+        };
     }
 
     /**
