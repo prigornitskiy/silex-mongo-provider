@@ -1,7 +1,7 @@
 <?php
 namespace Mongo\Silex\Provider;
 
-class MongoConnectionProvider extends \Pimple
+class MongoConnectionProvider extends \Pimple\Container
 {
     /**
      * @param array $options
@@ -25,7 +25,7 @@ class MongoConnectionProvider extends \Pimple
     {
         $mongoVersion = phpversion('mongo');
         if ($mongoVersion === false && phpversion('mongoDB')) {
-            $mongoClass = '\MongoDB\Driver\Manager';
+            $mongoClass = '\MongoDB\Client';
         } else {
             $mongoClass = (version_compare(phpversion('mongo'), '1.3.0', '<')) ? '\MongoDB\Client' : '\MongoClient';
         }
