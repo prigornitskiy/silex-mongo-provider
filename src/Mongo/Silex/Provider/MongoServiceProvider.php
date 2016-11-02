@@ -1,6 +1,6 @@
 <?php
 
-namespace Appi\Providers;
+namespace Mongo\Silex\Provider;
 
 use MongoClient as Client;
 use Pimple\Container;
