@@ -2,21 +2,33 @@
 
 namespace Mongo\Silex\Provider;
 
-use MongoClient as Client;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
 class MongoServiceProvider implements ServiceProviderInterface
 {
 
+    protected $app;
+
     protected $client;
+
+    /**
+     * MongoServiceProvider constructor.
+     */
+    public function __construct($app)
+    {
+        $this->app = $app;
+    }
+
 
     public function register(Container $app)
     {
 
         $app['mongo'] = function () use ($app) {
-            $this->client = new Client($app['mongo.options']['server'], $app['mongo.options']['options']);
-            return $this->client->{$app['mongo.options']['dbname']};
+            $conf = $this->app['config']['dbs']['nosql']['mongo.connections']['default'];
+            $mongoClass = (version_compare(phpversion('mongo'), '1.3.0', '<')) ? '\MongoDB\Client' : '\MongoClient';
+            $this->client = new $mongoClass($conf['server'], $conf['options']);
+            return $this->client;
         };
     }
 }
